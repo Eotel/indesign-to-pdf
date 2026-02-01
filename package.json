@@ -10,7 +10,13 @@
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "dev": "ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "oxlint src/",
+    "lint:fix": "oxlint src/ --fix",
+    "format": "oxfmt src/",
+    "format:check": "oxfmt src/ --check",
+    "typecheck": "tsgo --noEmit",
+    "check": "bun run lint && bun run format:check && bun run typecheck"
   },
   "keywords": ["indesign", "pdf", "converter", "adobe"],
   "author": "",
@@ -24,5 +30,10 @@
     "playwright": "^1.58.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@typescript/native-preview": "^7.0.0-dev.20260131.1",
+    "oxfmt": "^0.27.0",
+    "oxlint": "^1.42.0"
   }
 }

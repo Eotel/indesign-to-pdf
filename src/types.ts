@@ -53,7 +53,7 @@ export interface PageUrl {
 export interface ConversionProgress {
   currentPage: number;
   totalPages: number;
-  stage: 'fetching' | 'converting' | 'merging' | 'complete';
+  stage: "fetching" | "converting" | "merging" | "complete";
   message: string;
 }
 

@@ -1,4 +1,4 @@
-import { ReaderViewData, PublicationManifest, ParsedPublication, PageUrl } from './types';
+import { ReaderViewData, PublicationManifest, ParsedPublication, PageUrl } from "./types";
 
 export class ManifestParser {
   private viewUrl: string;
@@ -16,9 +16,11 @@ export class ManifestParser {
   }
 
   extractReaderViewData(html: string): ReaderViewData {
-    const scriptMatch = html.match(/readerViewDataFromServer\s*=\s*({[\s\S]*?})\s*(?:<\/script>|\n)/);
+    const scriptMatch = html.match(
+      /readerViewDataFromServer\s*=\s*({[\s\S]*?})\s*(?:<\/script>|\n)/,
+    );
     if (!scriptMatch) {
-      throw new Error('Could not find readerViewDataFromServer in HTML');
+      throw new Error("Could not find readerViewDataFromServer in HTML");
     }
 
     try {
@@ -32,9 +34,9 @@ export class ManifestParser {
   parseManifestBody(manifestBody: string): PublicationManifest {
     try {
       const manifest = JSON.parse(manifestBody) as PublicationManifest;
-      
+
       if (!manifest.pages || !Array.isArray(manifest.pages)) {
-        throw new Error('Manifest does not contain pages array');
+        throw new Error("Manifest does not contain pages array");
       }
 
       return manifest;
@@ -44,21 +46,17 @@ export class ManifestParser {
   }
 
   extractNumericId(html: string): string {
-    const iframeMatch = html.match(
-      /relativepath=\/content\/2\/[a-f0-9-]+\/(\d+)\/package\//
-    );
+    const iframeMatch = html.match(/relativepath=\/content\/2\/[a-f0-9-]+\/(\d+)\/package\//);
     if (iframeMatch) {
       return iframeMatch[1];
     }
 
-    const contentUrlMatch = html.match(
-      /indd\.adobe\.com\/content\/2\/[a-f0-9-]+\/(\d+)\/package/
-    );
+    const contentUrlMatch = html.match(/indd\.adobe\.com\/content\/2\/[a-f0-9-]+\/(\d+)\/package/);
     if (contentUrlMatch) {
       return contentUrlMatch[1];
     }
 
-    throw new Error('Could not extract numeric ID from HTML');
+    throw new Error("Could not extract numeric ID from HTML");
   }
 
   parse(html: string): ParsedPublication {

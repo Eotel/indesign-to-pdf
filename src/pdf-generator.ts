@@ -1,7 +1,6 @@
-import { chromium, Browser, Page } from 'playwright';
-import { PageUrl, ConversionProgress } from './types';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import { chromium, Browser } from "playwright";
+import { PageUrl, ConversionProgress } from "./types";
+import * as path from "path";
 
 export class PdfGenerator {
   private browser: Browser | null = null;
@@ -24,12 +23,9 @@ export class PdfGenerator {
     }
   }
 
-  async generatePdfFromUrl(
-    pageInfo: PageUrl,
-    outputPath: string
-  ): Promise<void> {
+  async generatePdfFromUrl(pageInfo: PageUrl, outputPath: string): Promise<void> {
     if (!this.browser) {
-      throw new Error('Browser not initialized');
+      throw new Error("Browser not initialized");
     }
 
     const page = await this.browser.newPage({
@@ -38,10 +34,10 @@ export class PdfGenerator {
         height: parseInt(pageInfo.height, 10),
       },
     });
-    
+
     try {
-      await page.goto(pageInfo.url, { waitUntil: 'networkidle', timeout: 60000 });
-      
+      await page.goto(pageInfo.url, { waitUntil: "networkidle", timeout: 60000 });
+
       await page.pdf({
         path: outputPath,
         width: pageInfo.width,
@@ -56,7 +52,7 @@ export class PdfGenerator {
 
   async generateAllPdfs(
     pageUrls: PageUrl[],
-    progressCallback?: (progress: ConversionProgress) => void
+    progressCallback?: (progress: ConversionProgress) => void,
   ): Promise<string[]> {
     const pdfPaths: string[] = [];
     const totalPages = pageUrls.length;
@@ -68,7 +64,7 @@ export class PdfGenerator {
         progressCallback({
           currentPage: index + 1,
           totalPages,
-          stage: 'converting',
+          stage: "converting",
           message: `Converting page ${pageInfo.pageNumber} to PDF...`,
         });
       }

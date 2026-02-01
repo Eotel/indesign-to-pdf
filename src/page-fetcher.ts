@@ -1,14 +1,15 @@
-import { PageUrl } from './types';
+import { PageUrl } from "./types";
 
 export class PageFetcher {
   async fetchPage(url: string, retries = 3): Promise<string> {
     let lastError: Error | undefined;
-    
+
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
         const response = await fetch(url, {
           headers: {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            "User-Agent":
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
           },
         });
 
@@ -42,12 +43,14 @@ export class PageFetcher {
       while (inProgress.length < concurrency && queue.length > 0) {
         const page = queue.shift();
         if (page) {
-          inProgress.push(processPage(page).finally(() => {
-            const index = inProgress.findIndex(p => p === inProgress[inProgress.length - 1]);
-            if (index > -1) {
-              inProgress.splice(index, 1);
-            }
-          }));
+          inProgress.push(
+            processPage(page).finally(() => {
+              const index = inProgress.findIndex((p) => p === inProgress[inProgress.length - 1]);
+              if (index > -1) {
+                inProgress.splice(index, 1);
+              }
+            }),
+          );
         }
       }
 
@@ -60,6 +63,6 @@ export class PageFetcher {
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
