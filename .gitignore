@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
+
+# Generated PDFs
+*.pdf
+
+# Debug files
+*.png
+*.html
+!src/**/*.html
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*

@@ -1,0 +1,28 @@
+{
+  "name": "indesign-to-pdf",
+  "version": "1.0.0",
+  "description": "Convert Adobe InDesign Online Publications to PDF",
+  "main": "dist/index.js",
+  "bin": {
+    "indd2pdf": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["indesign", "pdf", "converter", "adobe"],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "@types/node": "^25.1.0",
+    "cli-progress": "^3.12.0",
+    "commander": "^14.0.3",
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.58.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
