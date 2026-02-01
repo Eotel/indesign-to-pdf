@@ -45,7 +45,7 @@ export class IndesignToPdfConverter {
         message: `Converting ${filteredPages.length} pages to PDF...`,
       });
 
-      const pdfGenerator = new PdfGenerator(tempDir);
+      const pdfGenerator = new PdfGenerator(tempDir, this.options.concurrency);
       await pdfGenerator.initialize();
 
       try {

@@ -69,7 +69,7 @@ npx ts-node src/index.ts "https://indd.adobe.com/view/..." -o output.pdf -k
 | `-o, --output <path>` | Output PDF file path | `output.pdf` |
 | `-t, --temp-dir <path>` | Temporary directory for intermediate files | Auto-generated |
 | `-k, --keep-temp` | Keep temporary files after conversion | `false` |
-| `-c, --concurrency <number>` | Number of concurrent page fetches | `3` |
+| `-c, --concurrency <number>` | Number of concurrent PDF page renders | `3` |
 | `-r, --range <range>` | Page range (e.g., `1-10` or `5`) | All pages |
 | `--timeout <ms>` | Request timeout in milliseconds | `30000` |
 | `--retries <number>` | Number of retry attempts | `3` |
@@ -86,7 +86,7 @@ The converter follows a pipeline architecture:
 
 2. **Page Fetching** (`PageFetcher`): Concurrently fetches HTML content for all pages
 
-3. **PDF Generation** (`PdfGenerator`): Uses Playwright with Chromium to render each HTML page to PDF
+3. **PDF Generation** (`PdfGenerator`): Uses Playwright with Chromium to render HTML pages to PDF in parallel batches
 
 4. **PDF Merging** (`PdfMerger`): Uses pdf-lib to combine individual page PDFs into a single output file
 
@@ -113,9 +113,8 @@ The script uses Playwright to:
 
 ## Limitations
 
-- **Memory Usage**: Currently loads all page HTML into memory before PDF generation. For large publications (>10 pages), this may cause memory issues.
+- **Memory Usage**: For very large publications (>100 pages) with high-resolution content, PDF merging may require significant memory
 - **No Authentication**: Only works with publicly accessible publications
-- **Single-threaded PDF Generation**: PDF rendering is sequential due to Playwright browser instance limitations
 
 ## Development
 

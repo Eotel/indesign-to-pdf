@@ -5,9 +5,11 @@ import * as path from "path";
 export class PdfGenerator {
   private browser: Browser | null = null;
   private tempDir: string;
+  private concurrency: number;
 
-  constructor(tempDir: string) {
+  constructor(tempDir: string, concurrency: number = 3) {
     this.tempDir = tempDir;
+    this.concurrency = concurrency;
   }
 
   async initialize(): Promise<void> {
@@ -54,24 +56,32 @@ export class PdfGenerator {
     pageUrls: PageUrl[],
     progressCallback?: (progress: ConversionProgress) => void,
   ): Promise<string[]> {
-    const pdfPaths: string[] = [];
+    const pdfPaths: string[] = Array.from({ length: pageUrls.length });
     const totalPages = pageUrls.length;
+    let completedCount = 0;
 
-    for (let index = 0; index < pageUrls.length; index++) {
-      const pageInfo = pageUrls[index];
+    const convertPage = async (pageInfo: PageUrl, index: number) => {
+      const pdfPath = path.join(this.tempDir, `page-${pageInfo.pageNumber}.pdf`);
+      await this.generatePdfFromUrl(pageInfo, pdfPath);
+      pdfPaths[index] = pdfPath;
 
+      completedCount++;
       if (progressCallback) {
         progressCallback({
-          currentPage: index + 1,
+          currentPage: completedCount,
           totalPages,
           stage: "converting",
           message: `Converting page ${pageInfo.pageNumber} to PDF...`,
         });
       }
+    };
 
-      const pdfPath = path.join(this.tempDir, `page-${pageInfo.pageNumber}.pdf`);
-      await this.generatePdfFromUrl(pageInfo, pdfPath);
-      pdfPaths.push(pdfPath);
+    for (let i = 0; i < pageUrls.length; i += this.concurrency) {
+      const batch = pageUrls.slice(i, i + this.concurrency);
+      const batchPromises = batch.map((pageInfo, batchIndex) =>
+        convertPage(pageInfo, i + batchIndex),
+      );
+      await Promise.all(batchPromises);
     }
 
     return pdfPaths;
